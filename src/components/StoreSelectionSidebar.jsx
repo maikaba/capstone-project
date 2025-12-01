@@ -4,39 +4,40 @@ import "./StoreSelectionSidebar.css";
 export default function StoreSelectionSidebar({ 
   selectedStore, 
   onChangeStore, 
+  currentPage,
+  onNavigate,
   isOpen, 
-  onToggle 
 }) {
-  const stores = [
-    { name: "Store A", icon: "🏥" },
-    { name: "Store B", icon: "🏢" },
-    { name: "Store C", icon: "🏛️" },
-    { name: "Store D", icon: "⚕️" },
-  ];
-
   return (
     <>
-      <button className="sidebar-toggle" onClick={onToggle} title="Toggle store selector">
-        ☰
-      </button>
+      <aside className="sidebar">
+        {/* Navigation Links */}
+        <nav className="sidebar-nav">
+          <button
+            className={`nav-link ${currentPage === "dashboard" ? "active" : ""}`}
+            onClick={() => onNavigate("dashboard")}
+          >
+            <span className="icon">📊</span>
+            <span className="label">Dashboard</span>
+          </button>
 
-      <aside className={`store-sidebar ${isOpen ? "open" : ""}`}>
-        <div className="sidebar-header">
-          <h2>Stores</h2>
-          <button className="close-btn" onClick={onToggle}>✕</button>
-        </div>
+          <div className="nav-divider"></div>
 
-        <nav className="store-nav">
-          {stores.map((store) => (
-            <button
-              key={store.name}
-              className={`store-link ${selectedStore === store.name ? "active" : ""}`}
-              onClick={() => onChangeStore(store.name)}
-            >
-              <span className="store-icon">{store.icon}</span>
-              <span className="store-label">{store.name}</span>
-            </button>
-          ))}
+          <div className="nav-section">
+            <span className="nav-section-title">Stores</span>
+            {["Store A", "Store B", "Store C", "Store D"].map((store) => (
+              <button
+                key={store}
+                className={`nav-link store-link ${
+                  selectedStore === store && currentPage === "inventory" ? "active" : ""
+                }`}
+                onClick={() => onChangeStore(store)}
+              >
+                <span className="icon">🏪</span>
+                <span className="label">{store}</span>
+              </button>
+            ))}
+          </div>
         </nav>
       </aside>
     </>

@@ -73,12 +73,11 @@ body {
 /* ===== HEADER ===== */
 header {
   margin-bottom: 3rem;
-  position: relative;
   padding: 0.5rem 0;
 }
 
 header h1 {
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   font-size: 2.5rem;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -86,7 +85,6 @@ header h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 0.5rem;
 }
 
 header p {
@@ -146,7 +144,7 @@ form select:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Submit Button */
+/* ===== BUTTONS ===== */
 .btn-submit {
   background: var(--accent);
   color: white;
@@ -160,8 +158,6 @@ form select:focus {
   transition: all 0.25s ease;
   box-shadow: var(--shadow-sm);
 }
-  transition: background 0.25s, transform 0.2s;
-}
 
 .btn-submit:hover {
   background: var(--accent-hover);
@@ -173,19 +169,6 @@ form select:focus {
   transform: translateY(0);
 }
 
-/* Error Message */
-.error {
-  color: var(--danger);
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.75rem 1rem;
-  background: rgba(248, 113, 113, 0.1);
-  border-left: 3px solid var(--danger);
-  border-radius: var(--radius-sm);
-}
-
-/* ===== ADD PRODUCT BUTTON ===== */
 .add-product-btn {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
   color: white;
@@ -201,6 +184,7 @@ form select:focus {
   transition: all 0.25s ease;
   box-shadow: var(--shadow-sm);
   margin-bottom: 1.5rem;
+  white-space: nowrap;
 }
 
 .add-product-btn:hover {
@@ -210,6 +194,107 @@ form select:focus {
 
 .add-product-btn:active {
   transform: translateY(0);
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 0.5rem 0.65rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1.3rem;
+  transition: all 0.25s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.edit-btn {
+  color: var(--accent);
+}
+
+.edit-btn:hover {
+  color: var(--accent-hover);
+  background: rgba(59, 130, 246, 0.1);
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  color: var(--danger);
+}
+
+.delete-btn:hover {
+  color: var(--danger-hover);
+  background: rgba(248, 113, 113, 0.1);
+  transform: scale(1.1);
+}
+
+.edit-btn:active,
+.delete-btn:active {
+  transform: scale(0.95);
+}
+
+.home-btn,
+.theme-toggle-btn {
+  position: fixed;
+  top: 1.5rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: var(--shadow);
+  transition: all 0.25s ease;
+  z-index: 100;
+}
+
+.home-btn {
+  left: 1.5rem;
+}
+
+.theme-toggle-btn {
+  right: 1.5rem;
+}
+
+.home-btn:hover,
+.theme-toggle-btn:hover {
+  transform: translateY(-2px);
+  background: var(--accent-hover);
+  box-shadow: var(--shadow-lg);
+}
+
+.home-btn:active,
+.theme-toggle-btn:active {
+  transform: translateY(0);
+}
+
+/* ===== ACTION BAR ===== */
+.action-bar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.action-bar .add-product-btn {
+  margin-bottom: 0;
+}
+
+.action-bar .search-container {
+  flex: 1;
+  min-width: 250px;
+  margin-bottom: 0;
+}
+
+.action-bar .search-input {
+  max-width: 100%;
 }
 
 /* ===== SEARCH BAR ===== */
@@ -278,13 +363,19 @@ form select:focus {
   transition: opacity 0.3s ease;
 }
 
-/* Status-based highlighting */
-.inventory-item.expired {
+.inventory-item.expired,
+.inventory-item.low {
   border-color: var(--danger);
   background: rgba(248, 113, 113, 0.12);
 }
 
-.inventory-item.expired::before {
+.inventory-item.low {
+  border-color: var(--warning);
+  background: rgba(251, 191, 36, 0.12);
+}
+
+.inventory-item.expired::before,
+.inventory-item.low::before {
   display: none;
 }
 
@@ -303,32 +394,9 @@ form select:focus {
   box-shadow: var(--shadow-sm);
 }
 
-.inventory-item.low {
-  border-color: var(--warning);
-  background: rgba(251, 191, 36, 0.12);
-}
-
-.inventory-item.low::before {
-  display: none;
-}
-
 .inventory-item.low::after {
   content: '⚠️ LOW STOCK';
-  position: absolute;
-  bottom: 0.75rem;
-  right: 0.75rem;
   background: var(--warning);
-  color: white;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  box-shadow: var(--shadow-sm);
-}
-
-.inventory-item.normal {
-  border-color: var(--border);
 }
 
 .inventory-item:hover {
@@ -341,7 +409,7 @@ form select:focus {
   opacity: 1;
 }
 
-/* Top row: name + category */
+/* ===== ITEM DETAILS ===== */
 .top-row {
   display: flex;
   justify-content: space-between;
@@ -368,7 +436,6 @@ form select:focus {
   box-shadow: var(--shadow-sm);
 }
 
-/* Lower details row */
 .details-row {
   display: flex;
   flex-wrap: wrap;
@@ -390,101 +457,31 @@ form select:focus {
   align-items: center;
 }
 
-/* ===== STORE SELECTOR ===== */
-.store-selector {
-  margin-bottom: 1.75rem;
+/* ===== ITEM ACTIONS ===== */
+.item-actions {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.store-selector select {
-  width: auto;
-  flex: 1;
-  min-width: 180px;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.store-selector select:hover {
-  border-color: var(--accent);
-}
-
-.store-selector select:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* === THEME BUTTON === */
-.theme-toggle-btn {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 1.2rem;
-  box-shadow: var(--shadow);
-  transition: all 0.25s ease;
-  z-index: 100;
-}
-
-.theme-toggle-btn:hover {
-  transform: translateY(-2px);
-  background: var(--accent-hover);
-  box-shadow: var(--shadow-lg);
-}
-
-.theme-toggle-btn:active {
-  transform: translateY(0);
-}
-
-/* ===== DELETE BUTTON ===== */
-.delete-btn {
-  background: transparent;
-  color: var(--danger);
-  padding: 0.5rem 0.65rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 1.3rem;
-  transition: all 0.25s ease;
+  gap: 0.5rem;
   margin-top: 1rem;
-  min-width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: visible;
 }
 
-.delete-btn:hover {
-  color: var(--danger-hover);
-  transform: scale(1.2);
+/* ===== ERROR MESSAGE ===== */
+.error {
+  color: var(--danger);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  background: rgba(248, 113, 113, 0.1);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-sm);
 }
 
-.delete-btn:active {
-  transform: scale(0.95);
+.muted {
+  color: var(--text-secondary);
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  #root {
-    padding: 1.5rem 1rem;
-  }
-
   header h1 {
     font-size: 2rem;
   }
@@ -502,26 +499,41 @@ form select:focus {
     gap: 0.75rem;
   }
 
+  .home-btn,
   .theme-toggle-btn {
     top: 1rem;
-    right: 1rem;
     padding: 0.6rem 0.8rem;
     font-size: 1rem;
   }
-}
 
-@media (min-width: 1024px) {
-  .main-content {
-    margin-left: 260px;
+  .home-btn {
+    left: 1rem;
+  }
+
+  .theme-toggle-btn {
+    right: 1rem;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-bar .add-product-btn {
+    width: 100%;
+  }
+
+  .action-bar .search-container {
+    flex: 1;
+    min-width: auto;
+  }
+
+  .action-bar .search-input {
+    max-width: 100%;
   }
 }
 
 @media (min-width: 1200px) {
-  #root {
-    max-width: 1400px;
-    padding: 2.5rem;
-  }
-
   .card {
     padding: 2.5rem;
   }

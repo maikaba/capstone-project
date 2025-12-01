@@ -1,0 +1,77 @@
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
+}
+
+.chart-card h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Custom Tooltip */
+.custom-tooltip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.custom-tooltip p {
+  margin: 0.25rem 0;
+  font-weight: 500;
+}
+
+.tooltip-value {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Recharts Overrides */
+.recharts-text {
+  fill: var(--text) !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: var(--text-secondary) !important;
+}
+
+.recharts-legend-item-text {
+  color: var(--text) !important;
+  font-size: 0.9rem !important;
+}
+
+@media (max-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-card {
+    padding: 1.25rem;
+  }
+
+  .chart-card h3 {
+    font-size: 1rem;
+  }
+}
