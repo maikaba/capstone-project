@@ -54,14 +54,20 @@ export default function FormModal({ isOpen, onClose, selectedStore, onAdd, editi
     }
 
     if (editingItem) {
-      onAdd({
+      onAdd(selectedStore, {
         id: editingItem.id,
-        store: editingItem.store,
-        ...formData,
+        store: selectedStore,
+        name: formData.name,
+        category: formData.category,
         quantity: parseInt(formData.quantity),
+        batch: formData.batch,
+        expiryDate: formData.expiryDate,
+        temperature: formData.temperature,
       });
     } else {
       onAdd(selectedStore, {
+        id: Date.now() + Math.random() * 10000,
+        store: selectedStore,
         name: formData.name,
         category: formData.category,
         quantity: parseInt(formData.quantity),
@@ -92,18 +98,26 @@ export default function FormModal({ isOpen, onClose, selectedStore, onAdd, editi
               placeholder="Product Name"
               value={formData.name}
               onChange={handleChange}
+              className="form-input"
             />
 
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
+              className="form-select"
             >
               <option value="">Select Category</option>
-              <option value="COVID-19">COVID-19</option>
-              <option value="Influenza">Influenza</option>
-              <option value="Measles">Measles</option>
-              <option value="Polio">Polio</option>
+              <option value="Viral">Viral</option>
+              <option value="Bacterial">Bacterial</option>
+              <option value="Analgesic">Analgesic</option>
+              <option value="Antibiotic">Antibiotic</option>
+              <option value="Antidiabetic">Antidiabetic</option>
+              <option value="Statin">Statin</option>
+              <option value="ACE Inhibitor">ACE Inhibitor</option>
+              <option value="Proton Pump Inhibitor">Proton Pump Inhibitor</option>
+              <option value="Antihistamine">Antihistamine</option>
+              <option value="Vitamin">Vitamin</option>
               <option value="Other">Other</option>
             </select>
 
@@ -113,6 +127,7 @@ export default function FormModal({ isOpen, onClose, selectedStore, onAdd, editi
               placeholder="Quantity"
               value={formData.quantity}
               onChange={handleChange}
+              className="form-input"
             />
 
             <input
@@ -121,6 +136,7 @@ export default function FormModal({ isOpen, onClose, selectedStore, onAdd, editi
               placeholder="Batch Number"
               value={formData.batch}
               onChange={handleChange}
+              className="form-input"
             />
 
             <input
@@ -129,6 +145,7 @@ export default function FormModal({ isOpen, onClose, selectedStore, onAdd, editi
               placeholder="Expiry Date"
               value={formData.expiryDate}
               onChange={handleChange}
+              className="form-input"
             />
 
             <input
@@ -137,6 +154,7 @@ export default function FormModal({ isOpen, onClose, selectedStore, onAdd, editi
               placeholder="Storage Temperature (Optional)"
               value={formData.temperature}
               onChange={handleChange}
+              className="form-input"
             />
 
             <button type="submit" className="btn-submit">

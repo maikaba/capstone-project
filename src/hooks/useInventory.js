@@ -62,7 +62,14 @@ export default function useInventory() {
       // Check if any store has items
       const hasItems = Object.values(parsed).some(store => store.length > 0);
       if (hasItems) {
-        return parsed;
+        // Ensure all items have store property set
+        return Object.entries(parsed).reduce((acc, [storeName, items]) => {
+          acc[storeName] = items.map(item => ({
+            ...item,
+            store: item.store || storeName,
+          }));
+          return acc;
+        }, {});
       }
     }
     // Initialize with predefined data

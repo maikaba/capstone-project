@@ -4,7 +4,7 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("dark"); // default for clinical UI
+  const [theme, setTheme] = useState("light"); // Changed from "dark" to "light"
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");

@@ -16,6 +16,7 @@ export default function App() {
   const [editingItem, setEditingItem] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, itemId: null, itemName: null });
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
 
   // Handle store change
   const handleStoreChange = (store) => {
@@ -39,17 +40,31 @@ export default function App() {
     setIsFormOpen(true);
   };
 
-  const handleEditSave = (updatedData) => {
-    if (editingItem) {
-      // For edit mode - pass the full updated item
-      deleteProduct(selectedStore, editingItem.id);
-      addProduct(selectedStore, updatedData);
-    } else {
-      // For add mode - updatedData is (store, itemData)
-      addProduct(updatedData, arguments[1] || {});
+  const handleEditSave = (store, product) => {
+    if (isAddingProduct) return; // Prevent duplicate submissions
+    
+    setIsAddingProduct(true);
+    
+    try {
+      if (editingItem) {
+        deleteProduct(selectedStore, editingItem.id);
+        addProduct(store, {
+          ...product,
+          store: store,
+        });
+        showToast(`${product.name} updated successfully`, "success");
+      } else {
+        addProduct(store, {
+          ...product,
+          store: store,
+        });
+        showToast(`${product.name} added to ${store}`, "success");
+      }
+      setEditingItem(null);
+      setIsFormOpen(false);
+    } finally {
+      setIsAddingProduct(false);
     }
-    setEditingItem(null);
-    setIsFormOpen(false);
   };
 
   // Load items for selected store

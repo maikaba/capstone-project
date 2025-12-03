@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddProduct }) {
+export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddProduct, onShowToast }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [selectedStoreForAdd, setSelectedStoreForAdd] = useState("Store A");
@@ -107,7 +107,7 @@ export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddPr
     const allItems = Object.values(inventory).flat();
     
     if (allItems.length === 0) {
-      alert("No inventory data to export");
+      onShowToast("No inventory data to export", "error");
       return;
     }
 
@@ -137,6 +137,8 @@ export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddPr
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
+    onShowToast(`Complete inventory exported successfully (${allItems.length} items)`, "success");
   };
 
   return (
