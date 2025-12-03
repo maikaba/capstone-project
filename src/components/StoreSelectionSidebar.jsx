@@ -17,7 +17,7 @@ export default function StoreSelectionSidebar({
             className={`nav-link ${currentPage === "dashboard" ? "active" : ""}`}
             onClick={() => onNavigate("dashboard")}
           >
-            <span className="icon">📊</span>
+            <span className="icon">≡</span>
             <span className="label">Dashboard</span>
           </button>
 
@@ -33,7 +33,7 @@ export default function StoreSelectionSidebar({
                 }`}
                 onClick={() => onChangeStore(store)}
               >
-                <span className="icon">🏪</span>
+                <span className="icon">◆</span>
                 <span className="label">{store}</span>
               </button>
             ))}

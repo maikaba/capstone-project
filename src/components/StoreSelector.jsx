@@ -3,10 +3,10 @@ import "./StoreSelector.css";
 
 export default function StoreSelector({ selectedStore, onChangeStore }) {
   const stores = [
-    { name: "Store A", icon: "🏥" },
-    { name: "Store B", icon: "🏢" },
-    { name: "Store C", icon: "🏛️" },
-    { name: "Store D", icon: "⚕️" },
+    { name: "Store A", icon: "[A]" },
+    { name: "Store B", icon: "[B]" },
+    { name: "Store C", icon: "[C]" },
+    { name: "Store D", icon: "[D]" },
   ];
 
   return (

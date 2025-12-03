@@ -11,7 +11,7 @@ export default function DashboardStats({ items, getStatus }) {
   return (
     <div className="dashboard-stats">
       <div className="stat-card">
-        <div className="stat-icon">📦</div>
+        <div className="stat-icon">■</div>
         <div className="stat-content">
           <span className="stat-label">Total Units</span>
           <span className="stat-value">{totalItems}</span>
@@ -19,7 +19,7 @@ export default function DashboardStats({ items, getStatus }) {
       </div>
 
       <div className="stat-card">
-        <div className="stat-icon">💊</div>
+        <div className="stat-icon">●</div>
         <div className="stat-content">
           <span className="stat-label">Products</span>
           <span className="stat-value">{productCount}</span>
@@ -27,7 +27,7 @@ export default function DashboardStats({ items, getStatus }) {
       </div>
 
       <div className={`stat-card ${lowStockCount > 0 ? "warning" : ""}`}>
-        <div className="stat-icon">⚠️</div>
+        <div className="stat-icon">△</div>
         <div className="stat-content">
           <span className="stat-label">Low Stock</span>
           <span className="stat-value">{lowStockCount}</span>
@@ -35,7 +35,7 @@ export default function DashboardStats({ items, getStatus }) {
       </div>
 
       <div className={`stat-card ${expiredCount > 0 ? "danger" : ""}`}>
-        <div className="stat-icon">⏰</div>
+        <div className="stat-icon">◇</div>
         <div className="stat-content">
           <span className="stat-label">Expired</span>
           <span className="stat-value">{expiredCount}</span>

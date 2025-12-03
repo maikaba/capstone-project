@@ -1,11 +1,29 @@
 import React, { useState } from "react";
 import InventoryCharts from "./InventoryCharts";
 import "../styles/Dashboard.css";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddProduct }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [selectedStoreForAdd, setSelectedStoreForAdd] = useState("Store A");
+  const [formData, setFormData] = useState({
+    name: "",
+    category: "",
+    quantity: "",
+    batch: "",
+    expiryDate: "",
+    temperature: "",
+  });
 
   // Calculate overall statistics
   const allItems = Object.values(inventory).flat();
@@ -33,6 +51,94 @@ export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddPr
     item.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.category || !formData.quantity || !formData.expiryDate) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const newProduct = {
+      id: Date.now() + Math.random() * 10000,
+      name: formData.name,
+      category: formData.category,
+      quantity: parseInt(formData.quantity),
+      batch: formData.batch,
+      expiryDate: formData.expiryDate,
+      temperature: formData.temperature,
+    };
+
+    onAddProduct(selectedStoreForAdd, newProduct);
+
+    // Reset form
+    setFormData({
+      name: "",
+      category: "",
+      quantity: "",
+      batch: "",
+      expiryDate: "",
+      temperature: "",
+    });
+    setIsAddFormOpen(false);
+  };
+
+  const customTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p>{payload[0].payload.store}</p>
+          <p className="tooltip-value">{payload[0].name}: {payload[0].value}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const exportToCSV = () => {
+    const allItems = Object.values(inventory).flat();
+    
+    if (allItems.length === 0) {
+      alert("No inventory data to export");
+      return;
+    }
+
+    const headers = ["Store", "Product Name", "Category", "Quantity", "Batch Number", "Expiry Date", "Storage Temperature", "Status"];
+    const rows = allItems.map((item) => [
+      item.store || "Unknown",
+      item.name,
+      item.category,
+      item.quantity,
+      item.batch,
+      item.expiryDate,
+      item.temperature || "—",
+      getStatus(item).charAt(0).toUpperCase() + getStatus(item).slice(1),
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `vaccine-inventory-${new Date().toISOString().split("T")[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="dashboard">
       <header>
@@ -40,43 +146,45 @@ export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddPr
         <p>Overview of all vaccine inventory across stores</p>
       </header>
 
-      {/* Charts instead of Stats */}
       <InventoryCharts inventory={inventory} getStatus={getStatus} />
 
-      {/* Action Bar: Add Button + Search */}
       <div className="action-bar">
         <button 
           className="add-product-btn"
           onClick={() => setIsAddFormOpen(true)}
         >
-          + Add Product
+          + Add
+        </button>
+
+        <button 
+          className="export-btn"
+          onClick={exportToCSV}
+          title="Export inventory to CSV"
+        >
+          ⬇ Export
         </button>
 
         <div className="search-container">
           <input
             type="text"
             className="search-input"
-            placeholder="🔍 Search products across all stores..."
+            placeholder="Search products across all stores..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
 
-      {/* Add Product Modal */}
       {isAddFormOpen && (
         <div className="modal-backdrop" onClick={() => setIsAddFormOpen(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Add New Product</h2>
-              <button className="modal-close" onClick={() => setIsAddFormOpen(false)}>✕</button>
+              <button className="modal-close" onClick={() => setIsAddFormOpen(false)}>×</button>
             </div>
 
             <div className="modal-body">
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                setIsAddFormOpen(false);
-              }}>
+              <form onSubmit={handleFormSubmit}>
                 <div className="form-group">
                   <label>Select Store *</label>
                   <select
@@ -84,7 +192,7 @@ export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddPr
                     onChange={(e) => setSelectedStoreForAdd(e.target.value)}
                     className="form-select"
                   >
-                    {storeNames.map((store) => (
+                    {Object.keys(inventory).map((store) => (
                       <option key={store} value={store}>
                         {store}
                       </option>
@@ -94,40 +202,58 @@ export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddPr
 
                 <input
                   type="text"
-                  placeholder="Product Name"
+                  name="name"
+                  placeholder="Product Name *"
+                  value={formData.name}
+                  onChange={handleFormChange}
                   className="form-input"
                 />
 
-                <select className="form-select">
-                  <option value="">Select Category</option>
-                  <option value="COVID-19">COVID-19</option>
-                  <option value="Influenza">Influenza</option>
-                  <option value="Measles">Measles</option>
-                  <option value="Polio">Polio</option>
+                <select 
+                  name="category"
+                  value={formData.category}
+                  onChange={handleFormChange}
+                  className="form-select"
+                >
+                  <option value="">Select Category *</option>
+                  <option value="Viral">Viral</option>
+                  <option value="Bacterial">Bacterial</option>
                   <option value="Other">Other</option>
                 </select>
 
                 <input
                   type="number"
-                  placeholder="Quantity"
+                  name="quantity"
+                  placeholder="Quantity *"
+                  value={formData.quantity}
+                  onChange={handleFormChange}
                   className="form-input"
                 />
 
                 <input
                   type="text"
+                  name="batch"
                   placeholder="Batch Number"
+                  value={formData.batch}
+                  onChange={handleFormChange}
                   className="form-input"
                 />
 
                 <input
                   type="date"
-                  placeholder="Expiry Date"
+                  name="expiryDate"
+                  placeholder="Expiry Date *"
+                  value={formData.expiryDate}
+                  onChange={handleFormChange}
                   className="form-input"
                 />
 
                 <input
                   type="text"
-                  placeholder="Storage Temperature (Optional)"
+                  name="temperature"
+                  placeholder="Storage Temperature (e.g., 2-8°C)"
+                  value={formData.temperature}
+                  onChange={handleFormChange}
                   className="form-input"
                 />
 

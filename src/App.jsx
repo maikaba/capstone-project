@@ -61,6 +61,41 @@ export default function App() {
     item.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const exportStoreToCSV = () => {
+    const items = inventory[selectedStore];
+    
+    if (!items || items.length === 0) {
+      alert(`No inventory data in ${selectedStore} to export`);
+      return;
+    }
+
+    const headers = ["Product Name", "Category", "Quantity", "Batch Number", "Expiry Date", "Storage Temperature", "Status"];
+    const rows = items.map((item) => [
+      item.name,
+      item.category,
+      item.quantity,
+      item.batch,
+      item.expiryDate,
+      item.temperature || "—",
+      getStatus(item).charAt(0).toUpperCase() + getStatus(item).slice(1),
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${selectedStore}-inventory-${new Date().toISOString().split("T")[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="app">
       <div className="main-content">
@@ -69,7 +104,7 @@ export default function App() {
           onClick={() => setCurrentPage("dashboard")}
           title="Go to Dashboard"
         >
-          🏠
+          ⌂
         </button>
 
         <button 
@@ -77,7 +112,7 @@ export default function App() {
           onClick={toggleTheme}
           title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >
-          {theme === "dark" ? "☀️" : "🌙"}
+          {theme === "dark" ? "◯" : "◐"}
         </button>
 
         {/* Dashboard Page */}
@@ -107,14 +142,22 @@ export default function App() {
                 className="add-product-btn"
                 onClick={() => setIsFormOpen(true)}
               >
-                + Add Product
+                + Add
+              </button>
+
+              <button 
+                className="export-btn"
+                onClick={exportStoreToCSV}
+                title={`Export ${selectedStore} inventory to CSV`}
+              >
+                ⬇ Export
               </button>
 
               <div className="search-container">
                 <input
                   type="text"
                   className="search-input"
-                  placeholder="🔍 Search by name or category..."
+                  placeholder="Search by name or category..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -166,7 +209,7 @@ export default function App() {
                           onClick={() => handleEditClick(item)}
                           title="Edit item"
                         >
-                          ✏️
+                          ✎
                         </button>
 
                         <button
@@ -174,7 +217,7 @@ export default function App() {
                           onClick={() => handleDeleteClick(item.id, item.name)}
                           title="Delete item"
                         >
-                          🗑️
+                          ✕
                         </button>
                       </div>
                     </li>
