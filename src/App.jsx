@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Sidebar from "./components/Sidebar";
 import FormModal from "./components/FormModal";
 import ConfirmDialog from "./components/ConfirmDialog";
 import DashboardStats from "./components/DashboardStats";
@@ -6,6 +7,8 @@ import Dashboard from "./components/Dashboard";
 import useInventory from "./hooks/useInventory";
 import { useTheme } from "./context/ThemeContext";
 import "./App.css";
+
+const STORES = ["Store A", "Store B", "Store C", "Store D"];
 
 export default function App() {
   const { inventory, addProduct, deleteProduct, getStatus } = useInventory();
@@ -22,6 +25,11 @@ export default function App() {
   const handleStoreChange = (store) => {
     setSelectedStore(store);
     setCurrentPage("inventory");
+  };
+
+  // Handle page navigation
+  const handleNavigate = (page) => {
+    setCurrentPage(page);
   };
 
   // Handle delete with confirmation
@@ -41,7 +49,7 @@ export default function App() {
   };
 
   const handleEditSave = (store, product) => {
-    if (isAddingProduct) return; // Prevent duplicate submissions
+    if (isAddingProduct) return;
     
     setIsAddingProduct(true);
     
@@ -52,13 +60,11 @@ export default function App() {
           ...product,
           store: store,
         });
-        showToast(`${product.name} updated successfully`, "success");
       } else {
         addProduct(store, {
           ...product,
           store: store,
         });
-        showToast(`${product.name} added to ${store}`, "success");
       }
       setEditingItem(null);
       setIsFormOpen(false);
@@ -113,15 +119,16 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="main-content">
-        <button 
-          className="home-btn"
-          onClick={() => setCurrentPage("dashboard")}
-          title="Go to Dashboard"
-        >
-          ⌂
-        </button>
+      {/* Sidebar */}
+      <Sidebar
+        selectedStore={selectedStore}
+        onChangeStore={handleStoreChange}
+        currentPage={currentPage}
+        onNavigate={handleNavigate}
+        stores={STORES}
+      />
 
+      <div className="main-content">
         <button 
           className="theme-toggle-btn"
           onClick={toggleTheme}
@@ -137,6 +144,7 @@ export default function App() {
             getStatus={getStatus}
             onStoreSelect={handleStoreChange}
             onAddProduct={addProduct}
+            onShowToast={() => {}}
           />
         )}
 
@@ -148,10 +156,8 @@ export default function App() {
               <p>Track vaccines & pharmaceutical products across all stores</p>
             </header>
 
-            {/* Dashboard Stats */}
             <DashboardStats items={filteredItems} getStatus={getStatus} />
 
-            {/* Action Bar: Add Button + Search */}
             <div className="action-bar">
               <button 
                 className="add-product-btn"
@@ -179,7 +185,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Form Modal */}
             <FormModal 
               isOpen={isFormOpen}
               onClose={() => {
@@ -191,7 +196,6 @@ export default function App() {
               editingItem={editingItem}
             />
 
-            {/* Inventory List */}
             <section className="card">
               <h2>{selectedStore} Inventory</h2>
 
@@ -217,7 +221,6 @@ export default function App() {
                         )}
                       </div>
 
-                      {/* ACTION BUTTONS */}
                       <div className="item-actions">
                         <button
                           className="edit-btn"
@@ -243,7 +246,6 @@ export default function App() {
           </>
         )}
 
-        {/* Delete Confirmation Dialog */}
         <ConfirmDialog
           isOpen={deleteConfirm.isOpen}
           title="Delete Product"

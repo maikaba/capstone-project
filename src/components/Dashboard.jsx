@@ -220,6 +220,14 @@ export default function Dashboard({ inventory, getStatus, onStoreSelect, onAddPr
                   <option value="">Select Category *</option>
                   <option value="Viral">Viral</option>
                   <option value="Bacterial">Bacterial</option>
+                  <option value="Analgesic">Analgesic</option>
+                  <option value="Antibiotic">Antibiotic</option>
+                  <option value="Antidiabetic">Antidiabetic</option>
+                  <option value="Statin">Statin</option>
+                  <option value="ACE Inhibitor">ACE Inhibitor</option>
+                  <option value="Proton Pump Inhibitor">Proton Pump Inhibitor</option>
+                  <option value="Antihistamine">Antihistamine</option>
+                  <option value="Vitamin">Vitamin</option>
                   <option value="Other">Other</option>
                 </select>
 

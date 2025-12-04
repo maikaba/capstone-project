@@ -76,6 +76,18 @@ export default function FormModal({ isOpen, onClose, selectedStore, onAdd, editi
         temperature: formData.temperature,
       });
     }
+
+    // Reset form and close modal
+    setFormData({
+      name: "",
+      category: "",
+      quantity: "",
+      batch: "",
+      expiryDate: "",
+      temperature: "",
+    });
+    setError("");
+    onClose();
   };
 
   if (!isOpen) return null;
