@@ -6,9 +6,11 @@ export default function Sidebar({
   onChangeStore, 
   currentPage,
   onNavigate,
-  stores
+  stores,
+  onSidebarStateChange
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleNavClick = (page) => {
     onNavigate(page);
@@ -20,9 +22,17 @@ export default function Sidebar({
     setIsOpen(false);
   };
 
+  const handleCollapse = () => {
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    if (onSidebarStateChange) {
+      onSidebarStateChange(newState);
+    }
+  };
+
   return (
     <>
-      {/* Sidebar Toggle Button */}
+      {/* Sidebar Toggle Button (Mobile) */}
       <button 
         className="sidebar-toggle"
         onClick={() => setIsOpen(!isOpen)}
@@ -42,9 +52,17 @@ export default function Sidebar({
       )}
 
       {/* Sidebar */}
-      <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+      <aside className={`sidebar ${isOpen ? "open" : ""} ${isCollapsed ? "collapsed" : ""}`}>
         <div className="sidebar-header">
-          <h2>Menu</h2>
+          {!isCollapsed && <h2>Menu</h2>}
+          <button
+            className="sidebar-collapse-btn"
+            onClick={handleCollapse}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? "»" : "«"}
+          </button>
         </div>
 
         <nav className="sidebar-nav">
@@ -52,16 +70,17 @@ export default function Sidebar({
           <button
             className={`nav-link ${currentPage === "dashboard" ? "active" : ""}`}
             onClick={() => handleNavClick("dashboard")}
+            title={isCollapsed ? "Dashboard" : ""}
           >
             <span className="icon">⊞</span>
-            <span className="label">Dashboard</span>
+            {!isCollapsed && <span className="label">Dashboard</span>}
           </button>
 
-          <div className="nav-divider"></div>
+          {!isCollapsed && <div className="nav-divider"></div>}
 
           {/* Stores Section */}
           <div className="nav-section">
-            <span className="nav-section-title">Stores</span>
+            {!isCollapsed && <span className="nav-section-title">Stores</span>}
             {stores.map((store) => (
               <button
                 key={store}
@@ -69,18 +88,21 @@ export default function Sidebar({
                   selectedStore === store && currentPage === "inventory" ? "active" : ""
                 }`}
                 onClick={() => handleStoreClick(store)}
+                title={isCollapsed ? store : ""}
               >
                 <span className="icon">◆</span>
-                <span className="label">{store}</span>
+                {!isCollapsed && <span className="label">{store}</span>}
               </button>
             ))}
           </div>
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="sidebar-footer">
-          <small>Vaccine Inventory v1.0</small>
-        </div>
+        {!isCollapsed && (
+          <div className="sidebar-footer">
+            <small>Vaccine Inventory v1.0</small>
+          </div>
+        )}
       </aside>
     </>
   );

@@ -20,6 +20,7 @@ export default function App() {
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, itemId: null, itemName: null });
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Handle store change
   const handleStoreChange = (store) => {
@@ -30,6 +31,11 @@ export default function App() {
   // Handle page navigation
   const handleNavigate = (page) => {
     setCurrentPage(page);
+  };
+
+  // Handle sidebar collapse state
+  const handleSidebarStateChange = (isCollapsed) => {
+    setSidebarCollapsed(isCollapsed);
   };
 
   // Handle delete with confirmation
@@ -118,7 +124,7 @@ export default function App() {
   };
 
   return (
-    <div className="app">
+    <div className={`app ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       {/* Sidebar */}
       <Sidebar
         selectedStore={selectedStore}
@@ -126,6 +132,7 @@ export default function App() {
         currentPage={currentPage}
         onNavigate={handleNavigate}
         stores={STORES}
+        onSidebarStateChange={handleSidebarStateChange}
       />
 
       <div className="main-content">
