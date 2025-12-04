@@ -20,7 +20,8 @@ Key Features
   - Create: Add products via modal form
   - Read: View all products with details
   - Update: Edit products with ✏️ button
-  - Delete: Remove products with 🗑️ button (with confirmation)
+  - Delete: Remove products with X button (with confirmation)
+  - Export: Export .csv files with the touch of a button.
 
 3. Product Details
 Each item displays:
